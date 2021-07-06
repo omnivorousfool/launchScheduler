@@ -18,7 +18,12 @@ def save_settings(settings):
     with open('launch settings.ini', 'w') as setting:
         setStr = '\n'.join(settings)
         setting.write(setStr)
-        
+
+def create_default_set():
+    with open('launch settings.ini', 'w') as setting:
+        setting.write("18\n38\nlaunch settings.ini\n5")
+    print("load default settings")
+    return [18, 38, "launch settings.ini", 5]
     
 class scheduler(tk.Tk):
     def __init__(self):
@@ -30,7 +35,11 @@ class scheduler(tk.Tk):
         self.bind('<Escape>', lambda event: self.destroy())
         self.after(1000, self.auto_confirm)
 
-        self.settings = load_settings()
+        try:
+            self.settings = load_settings()
+        except FileNotFoundError:
+            self.settings = create_default_set()
+
         self.timeout = int(self.settings[3])
         self.count = self.timeout
         print(self.timeout)
